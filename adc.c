@@ -2,12 +2,12 @@
 #include "macros.h"
 #include <avr/io.h>
 
-void initADC(int psMask) {
+void initADC(uint8_t psMask) {
 	ADCSRA = mask(ADEN) | psMask;
 }
 
-unsigned int readADC(int channel) {
-	ADMUX = mask(REFS0) | 1;
+uint16_t readADC(uint8_t channel) {
+	ADMUX = mask(REFS0) | channel;
 	setFlag(ADCSRA, ADSC);
 	while (checkFlag(ADCSRA, ADSC));
 	return ADCW;

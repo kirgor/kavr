@@ -17,24 +17,24 @@ void twiStop() {
     TWCR = mask(TWINT, TWSTO, TWEN);
 }
 
-void twiWrite(char data) {
+void twiWrite(uint8_t data) {
     TWDR = data;
     TWCR = mask(TWINT, TWEN);
     while (!checkFlag(TWCR, TWINT));
 }
 
-char twiReadAck() {
+uint8_t twiReadAck() {
     TWCR = mask(TWINT, TWEA, TWEN);
     while (!checkFlag(TWCR, TWINT));
     return TWDR;
 }
 
-char twiReadNotAck() {
+uint8_t twiReadNotAck() {
 	TWCR = mask(TWINT, TWEN);
 	while (!checkFlag(TWCR, TWINT));
 	return TWDR;
 }
 
-char twiStatus() {
+uint8_t twiStatus() {
     return TWSR & 0xF8;
 }
