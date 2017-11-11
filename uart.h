@@ -7,8 +7,8 @@
  */
 void initUart(uint16_t ubrr);
 
-void uartWrite(char c);
+void uartWrite(uint8_t c);
 
-char uartRead();
+uint8_t uartRead();
 
-void uartWriteString(char* str);
+void uartWriteString(uint8_t *str);

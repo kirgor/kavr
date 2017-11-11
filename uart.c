@@ -8,19 +8,19 @@ void initUart(uint16_t ubrr) {
 	setFlags(UCSR0B, RXEN0, TXEN0);
 }
 
-void uartWrite(char c) {
+void uartWrite(uint8_t c) {
 	while (!checkFlag(UCSR0A, UDRE0));
 	UDR0 = c;
 }
 
-char uartRead() {
+uint8_t uartRead() {
 	while (!checkFlag(UCSR0A, RXC0));
 	return UDR0;
 }
 
-void uartWriteString(char* str) {
+void uartWriteString(uint8_t *str) {
 	for (int i = 0; ; i++) {
-		char c = str[i];
+		uint8_t c = str[i];
 		if (c) {
 			uartWrite(c);
 		} else {
