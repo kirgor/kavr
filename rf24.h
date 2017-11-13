@@ -45,4 +45,4 @@ void rf24_writeEnabledRxMask(rf24_handle *handle, uint8_t mask);
 
 void rf24_receive(rf24_handle *handle, uint8_t *buffer, uint8_t len);
 
-void rf24_transmit(rf24_handle *handle, uint8_t *buffer, uint8_t len);
+uint8_t rf24_transmit(rf24_handle *handle, uint8_t *buffer, uint8_t len);

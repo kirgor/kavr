@@ -101,10 +101,25 @@ void rf24_receive(rf24_handle *handle, uint8_t *buffer, uint8_t len) {
 	rf24_readRegister(handle, 0x61, buffer, len);
 }
 
-void rf24_transmit(rf24_handle *handle, uint8_t *buffer, uint8_t len) {
+uint8_t rf24_transmit(rf24_handle *handle, uint8_t *buffer, uint8_t len) {
 	rf24_writeRegister(handle, 0xa0, buffer, len);
 	handle->writeCe(1);
 	delayUs(20);
 	handle->writeCe(0);
-	rf24_waitStatusFlag(handle, 5);
+
+	uint8_t error = 0;
+	uint8_t status;
+	while (1) {
+		status = rf24_readRegisterByte(handle, 0x07);
+		if (checkFlag(status, 4)) {
+			error = 1;
+			break;
+		}
+		if (checkFlag(status, 5)) {
+			break;
+		}
+	}
+	rf24_writeRegister(handle, 0x07, &status, 1);
+
+	return error;
 }
