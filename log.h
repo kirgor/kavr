@@ -1,14 +1,20 @@
 #pragma once
 
-#ifdef LOG
+#ifdef LOG_ENABLED
+
 #include "uart.h"
 #include <stdio.h>
-char logBuffer[32];
-#define initLog(ubrr) initUart(ubrr)
-#define log(str) uartWriteString(str); uartWrite('\n')
-#define logFormat(format, ...) snprintf(logBuffer, 32, format, __VA_ARGS__); uartWriteString(logBuffer); uartWrite('\n')
+
+char log_buffer[32];
+
+#define log_init(ubrr) uart_init(ubrr)
+#define log_write(str) uart_write_string(str); uart_write('\n')
+#define log_write_format(format, ...) snprintf(log_buffer, 32, format, __VA_ARGS__); uart_write_string(log_buffer); uart_write('\n')
+
 #else
-#define initLog(ubrr)
-#define log(str)
-#define logFormat(format, ...)
+
+#define log_init(ubrr)
+#define log_write(str)
+#define log_write_format(format, ...)
+
 #endif

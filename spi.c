@@ -3,37 +3,37 @@
 #ifdef SPCR
 
 #include "spi.h"
-#include "output.h"
+#include "io.h"
 
-void initSpiSlave() {
-	initOutputB(4);
-	setFlags(SPCR, SPE);
+void spi_slave_init() {
+	port_b_output_mode(4);
+	set_flags(SPCR, SPE);
 }
 
-void initSpiMaster(uint8_t prescalerMask) {
-	initOutputB(3, 5);
-	SPCR |= mask(SPE, MSTR) | prescalerMask;
+void spi_master_init(uint8_t prescaler_mask) {
+	port_b_output_mode(3, 5);
+	SPCR |= mask(SPE, MSTR) | prescaler_mask;
 }
 
-uint8_t spiByteTransaction(uint8_t out) {
+uint8_t spi_byte_transaction(uint8_t out) {
 	SPDR = out;
-	while(!checkFlag(SPSR, SPIF));
+	while(!check_flag(SPSR, SPIF));
 	return SPDR;
 }
 
-void spiRead(uint8_t *buffer, uint8_t len) {
+void spi_read(uint8_t *buffer, uint8_t len) {
 	for (uint8_t i = 0; i < len; i++)
-		buffer[i] = spiByteTransaction(0);
+		buffer[i] = spi_byte_transaction(0);
 }
 
-void spiWrite(uint8_t *buffer, uint8_t len) {
+void spi_write(uint8_t *buffer, uint8_t len) {
 	for (uint8_t i = 0; i < len; i++)
-		spiByteTransaction(buffer[i]);
+		spi_byte_transaction(buffer[i]);
 }
 
-void spiReadWrite(uint8_t *rxBuffer, uint8_t *txBuffer, uint8_t len) {
+void spi_read_write(uint8_t *rx_buffer, uint8_t *tx_buffer, uint8_t len) {
 	for (uint8_t i = 0; i < len; i++)
-		rxBuffer[i] = spiByteTransaction(txBuffer[i]);
+		rx_buffer[i] = spi_byte_transaction(tx_buffer[i]);
 }
 
 #endif

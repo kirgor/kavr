@@ -1,5 +1,7 @@
 #define NARGS_(_1, _2, _3, _4, _5, _6, _7, _8, N, ...) N
 #define NARGS(...) NARGS_(__VA_ARGS__, 8, 7, 6, 5, 4, 3, 2, 1)
+#define CONCAT2(a, b) a ## b
+#define CONCAT(a, b) CONCAT2(a, b)
 
 #define mask1(b1) (1<<b1)
 #define mask2(b1,b2) (1<<b1)|(1<<b2)
@@ -12,8 +14,8 @@
 #define mask__(count, ...) mask ## count (__VA_ARGS__)
 #define mask_(count, ...) mask__(count, __VA_ARGS__)
 #define mask(...) mask_(NARGS(__VA_ARGS__), __VA_ARGS__)
-#define setFlags(var, ...) var |= mask(__VA_ARGS__)
-#define setFlag(var, flag) setFlags(var, flag)
-#define unsetFlags(var, ...) var &= ~(mask(__VA_ARGS__))
-#define unsetFlag(var, flag) unsetFlags(var, flag)
-#define checkFlag(var, flag) (var&(1<<flag))
+#define set_flags(var, ...) var |= mask(__VA_ARGS__)
+#define set_flag(var, flag) set_flags(var, flag)
+#define unset_flags(var, ...) var &= ~(mask(__VA_ARGS__))
+#define unset_flag(var, flag) unset_flags(var, flag)
+#define check_flag(var, flag) (var&(1<<flag))

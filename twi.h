@@ -1,5 +1,4 @@
 #pragma once
-
 #include <stdint.h>
 
 #define TWI_STATUS_START			0x08
@@ -13,10 +12,16 @@
 #define TWI_STATUS_READ_ACK			0x50
 #define TWI_STATUS_READ_NOT_ACK		0x58
 
-void twiInit();
-void twiStart();
-void twiStop();
-void twiWrite(uint8_t data);
-uint8_t twiReadAck();
-uint8_t twiReadNotAck();
-uint8_t twiStatus();
+void twi_init();
+
+void twi_start();
+
+void twi_stop();
+
+void twi_write(uint8_t data);
+
+uint8_t twi_read_ack();
+
+uint8_t twi_read_not_ack();
+
+uint8_t twi_status();

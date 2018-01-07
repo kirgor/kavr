@@ -1,9 +1,8 @@
 #pragma once
-
 #include <stdint.h>
 
 /**
- * psMask - ADC Prescaler Select Bits.
+ * ps_mask - ADC Prescaler Select Bits.
  * Possible values:
  * bit2		bit1	bit0	division factor
  * ----------------------------------------
@@ -16,9 +15,9 @@
  * 1		1		0		64
  * 1		1		1 		128
  */
-void initADC(uint8_t psMask);
+void adc_init(uint8_t ps_mask);
 
 /**
  * channel - number of ADC channel (from 0 to 7).
  */
-uint16_t readADC(uint8_t channel);
+uint16_t adc_read(uint8_t channel);

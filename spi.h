@@ -1,18 +1,24 @@
 #pragma once
+#include "macros.h"
 #include <avr/io.h>
 
 #ifdef SPCR
 
-void initSpiSlave();
+#define SPI_PRESCALER_4		0
+#define SPI_PRESCALER_16	mask(SPR0)
+#define SPI_PRESCALER_64	mask(SPR1)
+#define SPI_PRESCALER_128	mask(SPR0, SPR1)
 
-void initSpiMaster(uint8_t prescalerMask);
+void spi_slave_init();
 
-uint8_t spiByteTransaction(uint8_t out);
+void spi_master_init(uint8_t prescaler_mask);
 
-void spiRead(uint8_t *buffer, uint8_t len);
+uint8_t spi_byte_transaction(uint8_t out);
 
-void spiWrite(uint8_t *buffer, uint8_t len);
+void spi_read(uint8_t *buffer, uint8_t len);
 
-void spiReadWrite(uint8_t *rxBuffer, uint8_t *txBuffer, uint8_t len);
+void spi_write(uint8_t *buffer, uint8_t len);
+
+void spi_read_write(uint8_t *rx_buffer, uint8_t *tx_buffer, uint8_t len);
 
 #endif

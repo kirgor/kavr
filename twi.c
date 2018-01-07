@@ -2,39 +2,39 @@
 #include "macros.h"
 #include <avr/io.h>
 
-void twiInit() {
+void twi_init() {
     TWSR = 0x00;
     TWBR = 0x0C;
     TWCR = mask(TWEN);
 }
 
-void twiStart() {
+void twi_start() {
     TWCR = mask(TWINT, TWSTA, TWEN);
-    while (!checkFlag(TWCR, TWINT));
+    while (!check_flag(TWCR, TWINT));
 }
 
-void twiStop() {
+void twi_stop() {
     TWCR = mask(TWINT, TWSTO, TWEN);
 }
 
-void twiWrite(uint8_t data) {
+void twi_write(uint8_t data) {
     TWDR = data;
     TWCR = mask(TWINT, TWEN);
-    while (!checkFlag(TWCR, TWINT));
+    while (!check_flag(TWCR, TWINT));
 }
 
-uint8_t twiReadAck() {
+uint8_t twi_read_ack() {
     TWCR = mask(TWINT, TWEA, TWEN);
-    while (!checkFlag(TWCR, TWINT));
+    while (!check_flag(TWCR, TWINT));
     return TWDR;
 }
 
-uint8_t twiReadNotAck() {
+uint8_t twi_read_not_ack() {
 	TWCR = mask(TWINT, TWEN);
-	while (!checkFlag(TWCR, TWINT));
+	while (!check_flag(TWCR, TWINT));
 	return TWDR;
 }
 
-uint8_t twiStatus() {
+uint8_t twi_status() {
     return TWSR & 0xF8;
 }

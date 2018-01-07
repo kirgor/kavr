@@ -9,21 +9,21 @@
 #define ULTRASOUND_LOOP_OVERHEAD 10
 #endif
 
-double ultraSoundRead(ultra_sound_handle *handle) {
-	handle->writeTrigger(1);
-	delayUs(20);
-	handle->writeTrigger(0);
+double ultrasound_read(ultrasound_handle_t *handle) {
+	handle->write_trigger(1);
+	delay_us(20);
+	handle->write_trigger(0);
 
 	uint8_t echo = 0;
 	while (!echo) {
-		echo = handle->readEcho();
+		echo = handle->read_echo();
 	}
 
 	uint16_t ticks = 0;
 	while (echo) {
-		delayLoop2(ULTRASOUND_LOOP_DELAY);
+		delay_loop_2(ULTRASOUND_LOOP_DELAY);
 		ticks++;
-		echo = handle->readEcho();
+		echo = handle->read_echo();
 	}
 
 	double timeInSeconds = (1.0 / F_CPU) * ticks * (ULTRASOUND_LOOP_DELAY * 4 + ULTRASOUND_LOOP_OVERHEAD);

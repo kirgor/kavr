@@ -2,10 +2,10 @@
 #include <stdint.h>
 
 typedef struct {
-	void (*switchInput)();
-	void (*switchOutput)();
+	void (*switch_input)();
+	void (*switch_output)();
 	uint8_t (*read)();
 	void (*write)(uint8_t value);
-} ds18b20_handle;
+} ds18b20_handle_t;
 
-double ds18b20_read(ds18b20_handle *handle);
+double ds18b20_read(ds18b20_handle_t *handle);

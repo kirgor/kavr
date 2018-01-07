@@ -1,125 +1,102 @@
 #include "rf24.h"
-#include "macros.h"
+#include "io.h"
 #include "spi.h"
 #include "delay.h"
 
-void rf24_init(rf24_handle *handle) {
-	handle->writeCsn(1);
+#define rf24_ce_low(...) CONCAT(RF24_CE_PIN, _low())
+#define rf24_ce_high(...) CONCAT(RF24_CE_PIN, _high())
+#define rf24_csn_low(...) CONCAT(RF24_CSN_PIN, _low())
+#define rf24_csn_high(...) CONCAT(RF24_CSN_PIN, _high())
+
+void rf24_read_register(uint8_t address, uint8_t *buffer, uint8_t len) {
+	rf24_csn_low();
+	spi_byte_transaction(address);
+	spi_read(buffer, len);
+	rf24_csn_high();
 }
 
-uint8_t rf24_readRegisterByte(rf24_handle *handle, uint8_t address) {
-	handle->writeCsn(0);
-	spiByteTransaction(address);
-	uint8_t data = spiByteTransaction(0);
-	handle->writeCsn(1);
+void rf24_write_register(uint8_t address, uint8_t *buffer, uint8_t len) {
+	rf24_csn_low();
+	spi_byte_transaction(0b100000 | address);
+	spi_write(buffer, len);
+	rf24_csn_high();
+}
+
+uint8_t rf24_read_register_byte(uint8_t address) {
+	rf24_csn_low();
+	spi_byte_transaction(address);
+	uint8_t data = spi_byte_transaction(0);
+	rf24_csn_high();
 	return data;
 }
 
-void rf24_writeRegisterByte(rf24_handle *handle, uint8_t address, uint8_t data) {
-	handle->writeCsn(0);
-	spiByteTransaction(0b100000 | address);
-	spiByteTransaction(data);
-	handle->writeCsn(1);
+void rf24_write_register_byte(uint8_t address, uint8_t data) {
+	rf24_csn_low();
+	spi_byte_transaction(0b100000 | address);
+	spi_byte_transaction(data);
+	rf24_csn_high();
 }
 
-void rf24_readRegister(rf24_handle *handle, uint8_t address, uint8_t *buffer, uint8_t len) {
-	handle->writeCsn(0);
-	spiByteTransaction(address);
-	spiRead(buffer, len);
-	handle->writeCsn(1);
+void rf24_pins_init() {
+	CONCAT(RF24_CE_PIN, _output_mode());
+	CONCAT(RF24_CSN_PIN, _output_mode());
+	rf24_ce_low();
+	rf24_csn_high();
 }
 
-void rf24_writeRegister(rf24_handle *handle, uint8_t address, uint8_t *buffer, uint8_t len) {
-	handle->writeCsn(0);
-	spiByteTransaction(0b100000 | address);
-	spiWrite(buffer, len);
-	handle->writeCsn(1);
+void rf24_registers_init(uint8_t *slave_address, uint8_t *master_address, uint8_t request_length) {
+	// Power off
+	rf24_write_register_byte(0x00, 0b1000);
+	// Set TX address and RX address on pipe 0
+	rf24_write_register(0x10, master_address, 5);
+	rf24_write_register(0x0a, master_address, 5);
+	// Set RX address on pipe 1
+	rf24_write_register(0x0b, slave_address, 5);
+	// Set payload width for pipe 1
+	rf24_write_register_byte(0x12, request_length);
+	// Set max amount of retries (15)
+	rf24_write_register_byte(0x04, 0xff);
+	// Power on and enter RX mode
+	rf24_write_register_byte(0x00, 0b1011);
 }
 
-void rf24_writeRegisterBit(rf24_handle *handle, uint8_t address, uint8_t bitIndex, uint8_t bitValue) {
-	uint8_t data = rf24_readRegisterByte(handle, address);
-	if (bitValue) {
-		setFlag(data, bitIndex);
-	} else {
-		unsetFlag(data, bitIndex);
+uint8_t rf24_receive(uint8_t *buffer, uint8_t len) {
+	rf24_ce_high();
+
+	while (1) {
+		uint8_t status = rf24_read_register_byte(0x07);
+		if (check_flag(status, 6)) {
+			rf24_ce_low();
+			rf24_write_register_byte(0x07, 0xff);
+			rf24_read_register(0x61, buffer, len);
+			return 0;
+		}
 	}
-	rf24_writeRegisterByte(handle, address, data);
 }
 
-void rf24_power(rf24_handle *handle, uint8_t power) {
-	rf24_writeRegisterBit(handle, 0x00, 1, power);
-}
+uint8_t rf24_transmit(uint8_t *buffer, uint8_t len) {
+	rf24_write_register_byte(0x00, 0b1010);
+	rf24_write_register(0xa0, buffer, len);
 
-void rf24_direction(rf24_handle *handle, uint8_t direction) {
-	rf24_writeRegisterBit(handle, 0x00, 0, direction);
-}
-
-void rf24_listen(rf24_handle *handle, uint8_t listen) {
-	handle->writeCe(listen);
-}
-
-void rf24_getRxAddress(rf24_handle *handle, uint8_t pipe, uint8_t *address, uint8_t len) {
-	rf24_readRegister(handle, 0x0a + pipe, address, len);
-}
-
-void rf24_setRxAddress(rf24_handle *handle, uint8_t pipe, uint8_t *address, uint8_t len) {
-	rf24_writeRegister(handle, 0x0a + pipe, address, len);
-}
-
-void rf24_getTxAddress(rf24_handle *handle, uint8_t *address, uint8_t len) {
-	rf24_readRegister(handle, 0x10, address, len);
-}
-
-void rf24_setTxAddress(rf24_handle *handle, uint8_t *address, uint8_t len) {
-	rf24_writeRegister(handle, 0x10, address, len);
-}
-
-uint8_t rf24_getPayloadWidth(rf24_handle *handle, uint8_t pipe) {
-	return rf24_readRegisterByte(handle, 0x11 + pipe);
-}
-
-void rf24_setPayloadWidth(rf24_handle *handle, uint8_t pipe, uint8_t width) {
-	rf24_writeRegisterByte(handle, 0x11 + pipe, width);
-}
-
-uint8_t rf24_readEnabledRxMask(rf24_handle *handle) {
-	return rf24_readRegisterByte(handle, 0x02);
-}
-
-void rf24_writeEnabledRxMask(rf24_handle *handle, uint8_t mask) {
-	rf24_writeRegisterByte(handle, 0x02, mask);
-}
-
-void rf24_waitStatusFlag(rf24_handle *handle, uint8_t bit) {
-	uint8_t status;
-	do rf24_readRegister(handle, 0x07, &status, 1); while(!checkFlag(status, bit));
-	rf24_writeRegister(handle, 0x07, &status, 1);
-}
-
-void rf24_receive(rf24_handle *handle, uint8_t *buffer, uint8_t len) {
-	rf24_waitStatusFlag(handle, 6);
-	rf24_readRegister(handle, 0x61, buffer, len);
-}
-
-uint8_t rf24_transmit(rf24_handle *handle, uint8_t *buffer, uint8_t len) {
-	rf24_writeRegister(handle, 0xa0, buffer, len);
-	handle->writeCe(1);
-	delayUs(20);
-	handle->writeCe(0);
+	rf24_ce_high();
+	delay_us(20);
+	rf24_ce_low();
 
 	uint8_t error = 0;
 	uint8_t status;
 	while (1) {
-		status = rf24_readRegisterByte(handle, 0x07);
-		if (checkFlag(status, 4)) {
+		rf24_read_register(0x07, &status, 1);
+		if (check_flag(status, 4)) {
 			error = 1;
 			break;
 		}
-		if (checkFlag(status, 5)) {
+		if (check_flag(status, 5)) {
 			break;
 		}
 	}
-	rf24_writeRegister(handle, 0x07, &status, 1);
+	rf24_write_register_byte(0x07, 0xff);
+	rf24_write_register(0xe1, 0, 0);
+	rf24_write_register_byte(0x00, 0b1011);
 
 	return error;
 }
