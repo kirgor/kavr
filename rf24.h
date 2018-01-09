@@ -1,3 +1,5 @@
+#ifdef KAVR_FEATURE_RF24
+
 #pragma once
 #include <stdint.h>
 
@@ -30,3 +32,5 @@ uint8_t rf24_transmit(uint8_t *buffer, uint8_t len);
 void rf24_slave_tick(uint8_t *buffer, uint8_t request_length, void (*request_handler)());
 
 uint8_t rf24_slave_respond(uint8_t *data, uint8_t len);
+
+#endif

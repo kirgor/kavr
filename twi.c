@@ -1,3 +1,5 @@
+#ifdef KAVR_FEATURE_TWI
+
 #include "twi.h"
 #include "macros.h"
 #include <avr/io.h>
@@ -38,3 +40,5 @@ uint8_t twi_read_not_ack() {
 uint8_t twi_status() {
     return TWSR & 0xF8;
 }
+
+#endif

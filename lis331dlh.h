@@ -1,3 +1,5 @@
+#ifdef KAVR_FEATURE_LIS331DLH
+
 #pragma once
 #include <stdint.h>
 
@@ -14,3 +16,5 @@ int16_t lis331dlh_readX();
 int16_t lis331dlh_readY();
 
 int16_t lis331dlh_readZ();
+
+#endif

@@ -1,3 +1,5 @@
+#ifdef KAVR_FEATURE_ULTRASOUND
+
 #pragma once
 #include <stdint.h>
 
@@ -7,3 +9,5 @@ typedef struct {
 } ultrasound_handle_t;
 
 double ultrasound_read(ultrasound_handle_t *handle);
+
+#endif

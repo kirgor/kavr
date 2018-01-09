@@ -1,3 +1,5 @@
+#ifdef KAVR_FEATURE_ADC
+
 #include "adc.h"
 #include "macros.h"
 #include <avr/io.h>
@@ -12,3 +14,5 @@ uint16_t adc_read(uint8_t channel) {
 	while (check_flag(ADCSRA, ADSC));
 	return ADCW;
 }
+
+#endif

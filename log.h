@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef LOG_ENABLED
+#ifdef KAVR_LOG_ENABLED
 
 #include "uart.h"
 #include <stdio.h>

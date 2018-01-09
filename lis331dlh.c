@@ -1,3 +1,5 @@
+#ifdef KAVR_FEATURE_LIS331DLH
+
 #include "lis331dlh.h"
 #include "twi.h"
 
@@ -42,3 +44,5 @@ int16_t lis331dlh_read_y() {
 int16_t lis331dlh_read_z() {
 	return lis331dlh_read_register(0x2c) + (lis331dlh_read_register(0x2d) << 8);
 }
+
+#endif

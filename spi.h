@@ -1,3 +1,5 @@
+#ifdef KAVR_FEATURE_SPI
+
 #pragma once
 #include "macros.h"
 #include <avr/io.h>
@@ -20,5 +22,7 @@ void spi_read(uint8_t *buffer, uint8_t len);
 void spi_write(uint8_t *buffer, uint8_t len);
 
 void spi_read_write(uint8_t *rx_buffer, uint8_t *tx_buffer, uint8_t len);
+
+#endif
 
 #endif

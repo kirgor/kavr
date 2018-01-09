@@ -1,3 +1,5 @@
+#ifdef KAVR_FEATURE_SPI
+
 #include <avr/io.h>
 
 #ifdef SPCR
@@ -35,5 +37,7 @@ void spi_read_write(uint8_t *rx_buffer, uint8_t *tx_buffer, uint8_t len) {
 	for (uint8_t i = 0; i < len; i++)
 		rx_buffer[i] = spi_byte_transaction(tx_buffer[i]);
 }
+
+#endif
 
 #endif

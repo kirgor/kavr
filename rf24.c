@@ -1,3 +1,5 @@
+#ifdef KAVR_FEATURE_RF24
+
 #include "rf24.h"
 #include "io.h"
 #include "spi.h"
@@ -100,3 +102,5 @@ uint8_t rf24_transmit(uint8_t *buffer, uint8_t len) {
 
 	return error;
 }
+
+#endif

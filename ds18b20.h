@@ -1,3 +1,5 @@
+#ifdef KAVR_FEATURE_DS18B20
+
 #pragma once
 #include <stdint.h>
 
@@ -9,3 +11,5 @@ typedef struct {
 } ds18b20_handle_t;
 
 double ds18b20_read(ds18b20_handle_t *handle);
+
+#endif

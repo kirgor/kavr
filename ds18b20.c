@@ -1,3 +1,5 @@
+#ifdef KAVR_FEATURE_DS18B20
+
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include "delay.h"
@@ -81,3 +83,4 @@ double ds18b20_read(ds18b20_handle_t *handle) {
 	return ((th << 8) + tl) * 0.0625;
 }
 
+#endif

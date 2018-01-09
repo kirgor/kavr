@@ -1,3 +1,5 @@
+#ifdef KAVR_FEATURE_ADC
+
 #pragma once
 #include <stdint.h>
 
@@ -21,3 +23,5 @@ void adc_init(uint8_t ps_mask);
  * channel - number of ADC channel (from 0 to 7).
  */
 uint16_t adc_read(uint8_t channel);
+
+#endif

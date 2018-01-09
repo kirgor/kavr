@@ -1,5 +1,8 @@
+#ifdef KAVR_FEATURE_PWM
+
 #pragma once
 #include <stdint.h>
+#include <avr/io.h>
 
 #define PWM_DISABLED		0
 #define PWM_PRESCALER_1		1
@@ -12,3 +15,5 @@
 #define pwm_pd6_write(value) OCR0A=value
 
 void pwm_0_init(uint8_t prescaler_mask);
+
+#endif

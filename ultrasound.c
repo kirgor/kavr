@@ -1,3 +1,5 @@
+#ifdef KAVR_FEATURE_ULTRASOUND
+
 #include "ultrasound.h"
 #include "delay.h"
 
@@ -29,3 +31,5 @@ double ultrasound_read(ultrasound_handle_t *handle) {
 	double timeInSeconds = (1.0 / F_CPU) * ticks * (ULTRASOUND_LOOP_DELAY * 4 + ULTRASOUND_LOOP_OVERHEAD);
 	return 340.29 * timeInSeconds / 2;
 }
+
+#endif

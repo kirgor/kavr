@@ -1,3 +1,5 @@
+#ifdef KAVR_FEATURE_TWI
+
 #pragma once
 #include <stdint.h>
 
@@ -25,3 +27,5 @@ uint8_t twi_read_ack();
 uint8_t twi_read_not_ack();
 
 uint8_t twi_status();
+
+#endif
