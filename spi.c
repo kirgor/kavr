@@ -13,7 +13,7 @@ void spi_slave_init() {
 }
 
 void spi_master_init(uint8_t prescaler_mask) {
-	port_b_output_mode(3, 5);
+	port_b_output_mode(2, 3, 5);
 	SPCR |= mask(SPE, MSTR) | prescaler_mask;
 }
 
