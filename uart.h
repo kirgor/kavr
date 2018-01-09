@@ -3,7 +3,7 @@
 #pragma once
 #include <stdint.h>
 
-#define UBRR_16_9600 0x067
+#define UART_MODE_16_9600 0x067
 
 void uart_init(uint16_t ubrr);
 

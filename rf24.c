@@ -5,10 +5,10 @@
 #include "spi.h"
 #include "delay.h"
 
-#define rf24_ce_low(...) CONCAT(RF24_CE_PIN, _low())
-#define rf24_ce_high(...) CONCAT(RF24_CE_PIN, _high())
-#define rf24_csn_low(...) CONCAT(RF24_CSN_PIN, _low())
-#define rf24_csn_high(...) CONCAT(RF24_CSN_PIN, _high())
+#define rf24_ce_low(...) CONCAT(KAVR_RF24_CE_PIN, _low())
+#define rf24_ce_high(...) CONCAT(KAVR_RF24_CE_PIN, _high())
+#define rf24_csn_low(...) CONCAT(KAVR_RF24_CSN_PIN, _low())
+#define rf24_csn_high(...) CONCAT(KAVR_RF24_CSN_PIN, _high())
 
 void rf24_read_register(uint8_t address, uint8_t *buffer, uint8_t len) {
 	rf24_csn_low();
@@ -40,8 +40,8 @@ void rf24_write_register_byte(uint8_t address, uint8_t data) {
 }
 
 void rf24_pins_init() {
-	CONCAT(RF24_CE_PIN, _output_mode());
-	CONCAT(RF24_CSN_PIN, _output_mode());
+	CONCAT(KAVR_RF24_CE_PIN, _output_mode());
+	CONCAT(KAVR_RF24_CSN_PIN, _output_mode());
 	rf24_ce_low();
 	rf24_csn_high();
 }

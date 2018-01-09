@@ -3,16 +3,6 @@
 #pragma once
 #include <stdint.h>
 
-typedef struct {
-	void (*write_ce)(uint8_t value);
-	void (*write_csn)(uint8_t value);
-	uint8_t *slave_address;
-	uint8_t *master_address;
-	uint8_t *request_buffer;
-	uint8_t request_length;
-	void (*request_handler)();
-} rf24_slave_t;
-
 void rf24_read_register(uint8_t address, uint8_t *buffer, uint8_t len);
 
 void rf24_write_register(uint8_t address, uint8_t *buffer, uint8_t len);
